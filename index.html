@@ -1,90 +1,232 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>Conectando...</title>
+<title>Notificación Importante</title>
 
 <style>
+
 body{
-    font-family: Arial, sans-serif;
-    background:#f2f2f2;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
+font-family: Arial, sans-serif;
+text-align:center;
+margin-top:60px;
+background:#f4f4f4;
 }
 
-.contenedor{
-    background:white;
-    padding:40px;
-    border-radius:10px;
-    text-align:center;
-    box-shadow:0 0 10px rgba(0,0,0,0.2);
+#console{
+margin-top:40px;
+background:black;
+color:#00ff00;
+padding:20px;
+width:65%;
+height:260px;
+overflow-y:auto;
+margin-left:auto;
+margin-right:auto;
+font-family:monospace;
+text-align:left;
+border-radius:5px;
 }
 
-#estado{
-    font-size:20px;
-    margin-top:20px;
+.progressBar{
+width:100%;
+background:#333;
+height:20px;
+margin-top:10px;
 }
 
-.alerta{
-    position:fixed;
-    top:20px;
-    right:20px;
-    background:#ffffff;
-    border-left:5px solid #ff4d4d;
-    padding:15px;
-    margin-top:10px;
-    box-shadow:0 0 10px rgba(0,0,0,0.2);
-    border-radius:5px;
-    width:250px;
-    animation: aparecer 0.5s ease;
+.progress{
+height:20px;
+width:0%;
+background:#00ff00;
 }
 
-@keyframes aparecer{
-    from{opacity:0; transform:translateX(50px);}
-    to{opacity:1; transform:translateX(0);}
+.cmdBox{
+position:fixed;
+width:300px;
+height:170px;
+background:black;
+color:#00ff00;
+font-family:monospace;
+padding:10px;
+border:2px solid #333;
+box-shadow:0px 0px 10px rgba(0,0,0,0.6);
 }
+
+#modal{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+justify-content:center;
+align-items:center;
+}
+
+#modalContent{
+background:white;
+padding:30px;
+border-radius:10px;
+width:420px;
+text-align:center;
+}
+
+#modalContent h2{
+color:red;
+}
+
+#cerrar{
+margin-top:20px;
+padding:10px 20px;
+cursor:pointer;
+}
+
 </style>
+
 </head>
 
-<body>
+<body onload="iniciar()">
 
-<div class="contenedor">
+<h2>Notificación de Seguridad</h2>
+<p>Procesando solicitud...</p>
 
-<h2>Iniciando conexión...</h2>
+<div id="console"></div>
 
-<p id="estado">Conectando al servidor...</p>
+<div id="modal">
+<div id="modalContent">
 
+<h2>⚠️ SIMULACIÓN FINALIZADA</h2>
+
+<p>
+Esta fue una simulación educativa.<br><br>
+Así puede verse la ejecución de un enlace malicioso.<br>
+Nunca hagas clic en enlaces sospechosos.
+</p>
+
+<button id="cerrar" onclick="cerrarModal()">Cerrar</button>
+
+</div>
 </div>
 
 <script>
 
-function mostrarAlerta(texto){
+let consola = document.getElementById("console")
 
-    let alerta = document.createElement("div");
-    alerta.className = "alerta";
-    alerta.innerText = texto;
+function escribir(texto, delay=40){
 
-    document.body.appendChild(alerta);
+return new Promise(resolve=>{
 
-    setTimeout(()=>{
-        alerta.remove();
-    },4000);
+let i=0
+
+let intervalo=setInterval(()=>{
+
+consola.innerHTML += texto.charAt(i)
+i++
+
+consola.scrollTop = consola.scrollHeight
+
+if(i>=texto.length){
+clearInterval(intervalo)
+consola.innerHTML += "<br>"
+resolve()
+}
+
+},delay)
+
+})
+
+}
+
+async function iniciar(){
+
+await escribir("Resolviendo host remoto...")
+await escribir("IP detectada: 172.16.9.12")
+await escribir("Estableciendo conexión segura...")
+await escribir("Conectando al servidor 172.16.9.12")
+
+await escribir("Iniciando transferencia de paquete")
+
+barraProgreso()
+
+setTimeout(()=>{
+abrirVentanasCMD()
+},6000)
+
+}
+
+function barraProgreso(){
+
+let barra = document.createElement("div")
+barra.className="progressBar"
+
+let progreso = document.createElement("div")
+progreso.className="progress"
+
+barra.appendChild(progreso)
+
+consola.appendChild(barra)
+
+let porcentaje = 0
+
+let intervalo = setInterval(()=>{
+
+porcentaje += 5
+
+progreso.style.width = porcentaje+"%"
+
+if(porcentaje >=100){
+
+clearInterval(intervalo)
+
+consola.innerHTML += "<br>Descarga completada.<br>"
+consola.innerHTML += "Ejecutando archivo remoto...<br>"
+
+}
+
+},200)
+
+}
+
+function abrirVentanasCMD(){
+
+for(let i=0;i<15;i++){
+
+setTimeout(()=>{
+
+let box = document.createElement("div")
+
+box.className="cmdBox"
+
+box.style.left = Math.random()*80 + "%"
+
+box.style.top = Math.random()*70 + "%"
+
+box.innerHTML =
+"Microsoft Windows [Versión 10.0]<br>"+
+"(c) Microsoft Corporation<br><br>"+
+"C:\\Windows\\System32><br>"+
+"ejecutando_proceso.exe<br>"+
+"Proceso duplicado...<br>"+
+"Proceso duplicado...<br>"
+
+document.body.appendChild(box)
+
+}, i*200)
 
 }
 
 setTimeout(()=>{
-    mostrarAlerta("⚠ Conexión no segura detectada");
-},2000);
 
-setTimeout(()=>{
-    mostrarAlerta("⚠ Verificando servidor...");
-},4000);
+document.getElementById("modal").style.display="flex"
 
-setTimeout(()=>{
-    mostrarAlerta("⚠ Redirigiendo...");
-},6000);
+},4000)
+
+}
+
+function cerrarModal(){
+document.getElementById("modal").style.display="none"
+}
 
 </script>
 
