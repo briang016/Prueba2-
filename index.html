@@ -1,123 +1,91 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Notificación Importante</title>
-    <style>
-        body{
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 80px;
-            background-color: #f4f4f4;
-        }
+<meta charset="UTF-8">
+<title>Conectando...</title>
 
-        #console{
-            margin-top: 40px;
-            background: black;
-            color: #00ff00;
-            padding: 20px;
-            width: 60%;
-            height: 300px;
-            overflow-y: auto;
-            margin-left: auto;
-            margin-right: auto;
-            display: none;
-            font-family: monospace;
-            text-align: left;
-        }
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f2f2f2;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
 
-        #modal{
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            justify-content: center;
-            align-items: center;
-        }
+.contenedor{
+    background:white;
+    padding:40px;
+    border-radius:10px;
+    text-align:center;
+    box-shadow:0 0 10px rgba(0,0,0,0.2);
+}
 
-        #modalContent{
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            width: 400px;
-            text-align: center;
-        }
+#estado{
+    font-size:20px;
+    margin-top:20px;
+}
 
-        #modalContent h2{
-            color: red;
-        }
+.alerta{
+    position:fixed;
+    top:20px;
+    right:20px;
+    background:#ffffff;
+    border-left:5px solid #ff4d4d;
+    padding:15px;
+    margin-top:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.2);
+    border-radius:5px;
+    width:250px;
+    animation: aparecer 0.5s ease;
+}
 
-        #cerrar{
-            margin-top: 20px;
-            padding: 10px 20px;
-            cursor: pointer;
-        }
-    </style>
+@keyframes aparecer{
+    from{opacity:0; transform:translateX(50px);}
+    to{opacity:1; transform:translateX(0);}
+}
+</style>
 </head>
 
-<body onload="iniciar()">
+<body>
 
-<h2>Notificación de Seguridad</h2>
-<p>Procesando solicitud...</p>
+<div class="contenedor">
 
-<div id="console"></div>
+<h2>Iniciando conexión...</h2>
 
-<div id="modal">
-    <div id="modalContent">
-        <h2>⚠️ SIMULACIÓN FINALIZADA</h2>
-        <p>
-            Esta fue una simulación educativa.<br><br>
-            Así puede verse la ejecución de un enlace malicioso.
-            Nunca hagas clic en enlaces sospechosos.
-        </p>
-        <button id="cerrar" onclick="cerrarModal()">Cerrar</button>
-    </div>
+<p id="estado">Conectando al servidor...</p>
+
 </div>
 
 <script>
-function iniciar(){
-    let consola = document.getElementById("console");
-    consola.style.display = "block";
-    consola.innerHTML = "Resolviendo host remoto...\n";
+
+function mostrarAlerta(texto){
+
+    let alerta = document.createElement("div");
+    alerta.className = "alerta";
+    alerta.innerText = texto;
+
+    document.body.appendChild(alerta);
 
     setTimeout(()=>{
-        consola.innerHTML += "IP detectada: 172.16.9.12\n";
-    },1000);
+        alerta.remove();
+    },4000);
 
-    setTimeout(()=>{
-        consola.innerHTML += "Estableciendo conexión con 172.16.9.12...\n";
-    },2000);
-
-    setTimeout(()=>{
-        consola.innerHTML += "Conexión establecida.\n";
-        consola.innerHTML += "Descargando paquete remoto...\n";
-    },3000);
-
-    setTimeout(()=>{
-        consola.innerHTML += "Descarga completada.\n";
-        consola.innerHTML += "Ejecutando archivo...\n";
-        consola.innerHTML += "cmd.exe iniciado...\n";
-    },4500);
-
-    setTimeout(()=>{
-        let intervalo = setInterval(()=>{
-            consola.innerHTML += "Proceso duplicado...\n";
-            consola.scrollTop = consola.scrollHeight;
-        },100);
-
-        setTimeout(()=>{
-            clearInterval(intervalo);
-            document.getElementById("modal").style.display = "flex";
-        },10000);
-
-    },5500);
 }
 
-function cerrarModal(){
-    document.getElementById("modal").style.display = "none";
-}
+setTimeout(()=>{
+    mostrarAlerta("⚠ Conexión no segura detectada");
+},2000);
+
+setTimeout(()=>{
+    mostrarAlerta("⚠ Verificando servidor...");
+},4000);
+
+setTimeout(()=>{
+    mostrarAlerta("⚠ Redirigiendo...");
+},6000);
+
 </script>
 
 </body>
