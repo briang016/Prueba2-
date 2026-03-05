@@ -6,50 +6,46 @@
 <style>
 
 body{
-font-family: Arial, sans-serif;
-text-align:center;
-margin-top:60px;
+font-family: Arial;
 background:#f4f4f4;
+text-align:center;
+margin-top:80px;
 }
 
 #console{
-margin-top:40px;
 background:black;
 color:#00ff00;
-padding:20px;
-width:65%;
-height:260px;
-overflow-y:auto;
-margin-left:auto;
-margin-right:auto;
 font-family:monospace;
+width:65%;
+height:320px;
+margin:auto;
+padding:20px;
+overflow-y:auto;
+display:none;
 text-align:left;
-border-radius:5px;
-}
-
-.progressBar{
-width:100%;
-background:#333;
-height:20px;
-margin-top:10px;
 }
 
 .progress{
-height:20px;
+width:100%;
+background:#333;
+margin-top:10px;
+}
+
+.progress-bar{
 width:0%;
+height:20px;
 background:#00ff00;
 }
 
 .cmdBox{
 position:fixed;
-width:300px;
-height:170px;
 background:black;
 color:#00ff00;
 font-family:monospace;
 padding:10px;
+width:260px;
+height:120px;
 border:2px solid #333;
-box-shadow:0px 0px 10px rgba(0,0,0,0.6);
 }
 
 #modal{
@@ -62,13 +58,14 @@ height:100%;
 background:rgba(0,0,0,0.7);
 justify-content:center;
 align-items:center;
+z-index:9999;
 }
 
 #modalContent{
 background:white;
 padding:30px;
 border-radius:10px;
-width:420px;
+width:400px;
 text-align:center;
 }
 
@@ -83,8 +80,8 @@ cursor:pointer;
 }
 
 </style>
-
 </head>
+
 
 <body onload="iniciar()">
 
@@ -100,7 +97,7 @@ cursor:pointer;
 
 <p>
 Esta fue una simulación educativa.<br><br>
-Así puede verse la ejecución de un enlace malicioso.<br>
+Así puede verse la ejecución de un enlace malicioso.<br><br>
 Nunca hagas clic en enlaces sospechosos.
 </p>
 
@@ -109,123 +106,126 @@ Nunca hagas clic en enlaces sospechosos.
 </div>
 </div>
 
+
 <script>
 
-let consola = document.getElementById("console")
+function escribir(texto,delay){
+setTimeout(()=>{
+let consola=document.getElementById("console")
+consola.innerHTML+=texto+"<br>"
+consola.scrollTop=consola.scrollHeight
+},delay)
+}
 
-function escribir(texto, delay=40){
 
-return new Promise(resolve=>{
+function iniciar(){
 
-let i=0
+let consola=document.getElementById("console")
+consola.style.display="block"
+
+escribir("Resolviendo host remoto...",500)
+escribir("IP detectada: 172.16.9.12",1200)
+escribir("Estableciendo conexión con 172.16.9.12...",2000)
+escribir("Conexión establecida.",3000)
+escribir("Inicializando transferencia segura...",3800)
+escribir("Descargando paquete remoto...",4500)
+
+setTimeout(crearBarra,5200)
+
+}
+
+
+function crearBarra(){
+
+let consola=document.getElementById("console")
+
+consola.innerHTML+=`
+
+<div class="progress">
+<div class="progress-bar" id="barra"></div>
+</div>
+
+`
+
+let progreso=0
 
 let intervalo=setInterval(()=>{
 
-consola.innerHTML += texto.charAt(i)
-i++
+progreso+=2
 
-consola.scrollTop = consola.scrollHeight
+document.getElementById("barra").style.width=progreso+"%"
 
-if(i>=texto.length){
-clearInterval(intervalo)
-consola.innerHTML += "<br>"
-resolve()
-}
-
-},delay)
-
-})
-
-}
-
-async function iniciar(){
-
-await escribir("Resolviendo host remoto...")
-await escribir("IP detectada: 172.16.9.12")
-await escribir("Estableciendo conexión segura...")
-await escribir("Conectando al servidor 172.16.9.12")
-
-await escribir("Iniciando transferencia de paquete")
-
-barraProgreso()
-
-setTimeout(()=>{
-abrirVentanasCMD()
-},6000)
-
-}
-
-function barraProgreso(){
-
-let barra = document.createElement("div")
-barra.className="progressBar"
-
-let progreso = document.createElement("div")
-progreso.className="progress"
-
-barra.appendChild(progreso)
-
-consola.appendChild(barra)
-
-let porcentaje = 0
-
-let intervalo = setInterval(()=>{
-
-porcentaje += 5
-
-progreso.style.width = porcentaje+"%"
-
-if(porcentaje >=100){
+if(progreso>=100){
 
 clearInterval(intervalo)
 
-consola.innerHTML += "<br>Descarga completada.<br>"
-consola.innerHTML += "Ejecutando archivo remoto...<br>"
+let consola=document.getElementById("console")
+
+consola.innerHTML+="<br>Descarga completada.<br>"
+consola.innerHTML+="Ejecutando archivo remoto...<br>"
+consola.innerHTML+="cmd.exe iniciado...<br>"
+
+setTimeout(abrirVentanasCMD,1200)
 
 }
 
-},200)
+},60)
 
 }
+
 
 function abrirVentanasCMD(){
 
-for(let i=0;i<15;i++){
+let totalVentanas=10
+
+for(let i=0;i<totalVentanas;i++){
 
 setTimeout(()=>{
 
-let box = document.createElement("div")
+let ventana=document.createElement("div")
 
-box.className="cmdBox"
+ventana.className="cmdBox"
 
-box.style.left = Math.random()*80 + "%"
+ventana.style.left=Math.random()*80+"%"
+ventana.style.top=Math.random()*70+"%"
 
-box.style.top = Math.random()*70 + "%"
+ventana.innerHTML=`
+C:\\Windows\\System32><br>
+Proceso duplicado...<br>
+Escaneando sistema...<br>
+Acceso remoto establecido
+`
 
-box.innerHTML =
-"Microsoft Windows [Versión 10.0]<br>"+
-"(c) Microsoft Corporation<br><br>"+
-"C:\\Windows\\System32><br>"+
-"ejecutando_proceso.exe<br>"+
-"Proceso duplicado...<br>"+
-"Proceso duplicado...<br>"
+document.body.appendChild(ventana)
 
-document.body.appendChild(box)
-
-}, i*200)
+},i*200)
 
 }
 
-setTimeout(()=>{
+setTimeout(cancelarSimulacion,4000)
+
+}
+
+
+function cancelarSimulacion(){
+
+// eliminar ventanas cmd
+
+document.querySelectorAll(".cmdBox").forEach(v=>{
+v.remove()
+})
+
+// mostrar mensaje final
 
 document.getElementById("modal").style.display="flex"
 
-},4000)
-
 }
 
+
 function cerrarModal(){
+
 document.getElementById("modal").style.display="none"
+
 }
 
 </script>
